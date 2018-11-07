@@ -102,15 +102,16 @@ public class BankApp {
 		listAccounts = aService.findAllAccount(userId);
 			
 		int numOfAccount = listAccounts.size();
-		
+		int id;
 			if(numOfAccount==1) {  // User has only 1 account
 				currentAccount = listAccounts.get(0);
-				accountId = currentAccount.getAccountId();
+				id = currentAccount.getTypeId();
+				findAccountType(id);
+				//accountId = currentAccount.getAccountId();
 		
 			}
 			else {  // User has more than one account.
 				
-				int id;
 				double balance;
 				String accountType;
 				
@@ -128,6 +129,10 @@ public class BankApp {
 			}
 	}
 	
+	/*
+	 * use typeid to find accounttype 'Checking or saving'
+	 * return to currentType obj.
+	 */
 	public static void findAccountType(int id) {
 		currentType = typeService.findById(id);
 	}
@@ -138,7 +143,6 @@ public class BankApp {
 	 */
 	public static void selectAccount() {
 		
-		
 		try {
 			Scanner scan = new Scanner(System.in);
 			
@@ -147,7 +151,7 @@ public class BankApp {
 			int choice = scan.nextInt();
 			
 			currentAccount = listAccounts.get(choice-1);
-			accountId = currentAccount.getAccountId();
+			//accountId = currentAccount.getAccountId();
 		
 		} catch(InputMismatchException e) {
 			System.out.println("Please enter a correct account order! \n");
@@ -167,13 +171,13 @@ public class BankApp {
 		
 		Scanner scan = new Scanner(System.in);
 		
-		System.out.println("\n       Welcome " + currentUser.getFirstName() 
-				+ "\n    Your balance is $" + currentAccount.getBalance() + "\n"
+		System.out.println("\n                Welcome " + currentUser.getFirstName() 
+				+ "\n    Your " + currentType.getAccounType() + " account has a balance of $ " + currentAccount.getBalance() + "\n"
 				+ "\n 1. To deposit, enter 1: "
 				+ "\n 2. To withdraw, enter 2: "
-				+ "\n 3. List of your accounts, enter 3: "
+				+ "\n 3. To view a list of your accounts, enter 3: "
 				+ "\n 4. To create another bank account, enter 4:"
-				+ "\n 5. To log out, enter 4: ");
+				+ "\n 5. To log out, enter 5: ");
 
 		int option = 0;
 	
@@ -195,9 +199,6 @@ public class BankApp {
 			afterLoginMenu(); 
 		}
 	}
-	
-	
-	
 	
 	
 	/*
@@ -302,6 +303,7 @@ public class BankApp {
 			
 			currentUser = uService.checkUserNamePassword(username, password); // return currentUser
 			userId = currentUser.getUserId();
+			System.out.println(firstname + " ,your username and password have been created! \n");
 			createNewAccount();
 		}
 	}
